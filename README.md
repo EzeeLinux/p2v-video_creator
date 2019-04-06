@@ -4,7 +4,9 @@
 
  P2V creates a high quality video file from a picture file and an audio file.
  You can choose whatever kind of picture file and audio file you want -- the
- output will always be a 1280p wide .mkv video file with flac audio. 
+ output will always be a 1280p wide .mkv video file with flac audio. It is
+ compatible with Ubuntu 16.04 and up, Debian 8 and up and Linux Mint 18.x and
+ up.
 
 
 2. Installation:

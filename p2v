@@ -1,7 +1,9 @@
 #!/bin/bash
 
 # P2V - Creates a Video from a Picture and Audio File (Version 1.0)
-# This script relies on FFmpeg.
+# This script depends on FFmpeg and the flac codec. 
+# It is compatible with Ubuntu 16.04 and up, Debian 8 and up and 
+# Linux mint 18.x and up.
 # (GNU/General Public License version 2.0
 # by Joe Collins www.ezeelinux.com (April, 2019)
 
