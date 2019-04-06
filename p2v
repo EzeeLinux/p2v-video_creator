@@ -1,0 +1,138 @@
+#!/bin/bash
+
+# P2V - Creates a Video from a Picture and Audio File (Version 1.0)
+# This script relies on FFmpeg.
+# (GNU/General Public License version 2.0
+# by Joe Collins www.ezeelinux.com (April, 2019)
+
+# Check for dependencies, install if needed:
+
+dpkg -l | grep -qw ffmpeg || sudo apt-get install -yyq ffmpeg
+dpkg -l | grep -qw flac || sudo apt-get install -yyq flac
+dpkg -l | grep -qw less || sudo apt-get install -yyq less
+
+# Declare Variables:
+
+picture=$1
+audio=$2
+video=$3
+
+# Functions.
+
+p2v-help() {
+
+# Create here document and display it using less:
+
+less << _EOF_
+
+ P2V - Creates a Video from a Picture and Audio File (Version 1.0)
+
+ Help Page -- Press 'q' to exit.
+
+ P2V creates a high quality video file from a picture file and an audio file.
+ You can choose whatever kind of picture file and audio file you want -- the
+ output will always be a 1280p wide .mkv video file with flac audio. 
+
+ Commands:
+
+    p2v /path/to/picture.file /path/to/audio.file = Will create a video file
+    in the current working directory. You may also provide a full path for the
+    output video file to create it in another directory if you want. Example:
+    p2v /path/to/picture.file /path/to/audio.file /path/to/video_filemame
+
+    p2v --help = shows this help page.
+
+    Press 'q' after the conversion starts to stop the process and exit p2v.
+    The file will be playable but incomplete. 
+    
+    You can provide P2V with pictures in the .jpg or .png format. 
+    The format of the audio file can be saved as .mp3, .wav, .flac, .ogg and 
+    more... You should be able to use any audio file you can play. 
+
+ By Joe Collins www.ezeelinux.com (GNU/General Public License version 2.0)
+
+ Disclaimer:
+
+ THIS SOFTWARE IS PROVIDED BY EZEELINUX “AS IS” AND ANY EXPRESS OR IMPLIED
+ WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
+ EVENT SHALL EZEELINUX BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+ BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+ IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ POSSIBILITY OF SUCH DAMAGE.
+
+_EOF_
+
+}
+
+make-vid() {
+
+# Grab user provided filebames and make video file using FFmpeg:
+
+ffmpeg -loop 1 -y -i "$picture" -i "$audio" -shortest -acodec flac \
+-vcodec libx264 -preset fast -vf scale=1280:-2 "$video".mkv
+
+# Test for FFmpeg errors, tell the user and exit with proper code:
+
+if [ "$?" != "0" ]; then
+    echo "P2V Error: FFmpeg has exited with errors. Suggestions:"
+    echo "           Double check that you've entered valid"
+    echo "           filenames and that the files are really"
+    echo "           the ones you want. Don't specify an output"
+    echo "           filename and let the program create its own."
+    exit 1
+else
+    echo "Success! "$video".mkv is ready to go."
+    echo "Thanks for using P2V. ...Goodbye!"
+    exit
+fi
+
+}
+
+# Execution.
+
+# Test for no arguments and suggest "--help" argument:
+
+if  [ -z "$1"  ]; then
+    echo "P2V Error: You must provide paths and filenames." >&2
+    echo "           Try 'p2v --help' to learn more." >&2
+    exit 1
+fi
+
+# Run help function if "--help" is first argument:
+
+if [ "$1" == "--help" ]; then
+    p2v-help
+    exit
+fi
+
+# Test for valid user entered picture and audio file names:
+
+if [ ! -f "$picture" ]; then
+    echo "P2V Error: $picture does not exist!" >&2
+    echo "           Try again. You must provide a valid picture" >&2
+    echo "           filename. Try 'p2v --help' to learn more." >&2
+    exit 1
+fi
+
+if [ ! -f "$audio" ]; then
+    echo "P2V Error: $audio does not exist!" >&2
+    echo "           Try again. You must provide a valid audio" >&2
+    echo "           filename. Try 'p2v --help' to learn more." >&2
+    exit 1
+fi
+
+# Test to see if user has provided an output filename and
+# create one if they have not:
+
+if  [ -z "$3"  ]; then
+    video=p2v_video
+fi
+
+# Run make-vid function and exit:
+
+make-vid
+
