@@ -80,11 +80,11 @@ ffmpeg -loop 1 -y -i "$picture" -i "$audio" -shortest -acodec flac \
 # Test for FFmpeg errors, tell the user and exit with proper code:
 
 if [ "$?" != "0" ]; then
-    echo "P2V Error: FFmpeg has exited with errors. Suggestions:"
-    echo "           Double check that you've entered valid"
-    echo "           filenames and that the files are really"
-    echo "           the ones you want. Don't specify an output"
-    echo "           filename and let the program create its own."
+    echo "P2V Error: FFmpeg has exited with errors. Suggestions:" >&2
+    echo "           Double check that you've entered valid" >&2
+    echo "           filenames and that the files are really" >&2
+    echo "           the ones you want. Don't specify an output" >&2
+    echo "           filename and let the program create its own." >&2
     exit 1
 else
     echo "Success! "$video".mkv is ready to go."
