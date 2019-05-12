@@ -16,14 +16,14 @@
  drag the file out of Archive Manager to wherever you'd like it to go.
 
 
-4. License.
+3. License.
 
  P2V is free softare. You can redistribute it and/or modify it under the
  terms of the GNU General Public License Version 2.0. as published by
  the Free Software Foundation. A copy of the GNU GPL 2.0 is provided with the
  software.
 
-5. Contents of Help Page:
+4. Contents of Help Page:
 
  P2V - Creates a Video from a Picture and Audio File (Version 1.0)
 
